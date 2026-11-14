@@ -1,0 +1,19 @@
+fastapi==0.115.12
+uvicorn[standard]==0.34.0
+pydantic==2.10.6
+pydantic-settings==2.8.1
+SQLAlchemy==2.0.39
+alembic==1.15.2
+psycopg[binary]==3.2.6
+PyMySQL[rsa]==1.1.1
+playwright==1.64.1
+langgraph==0.6.10
+langchain-ollama==0.3.6
+chromadb==1.0.20
+sentence-transformers==5.1.0
+# ChromaDB client dependency, pinned below releases requiring newer Pydantic.
+kubernetes==35.0.0
+python-dotenv==1.0.1
+httpx==0.28.1
+pytest==8.3.5
+pytest-asyncio==0.25.3

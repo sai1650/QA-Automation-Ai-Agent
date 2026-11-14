@@ -1,0 +1,351 @@
+{
+  "dataset_id": "qa_synthetic_v1",
+  "version": "1.0.0",
+  "name": "Synthetic QA Agent Smoke Benchmark",
+  "description": "Small deterministic, explicitly synthetic benchmark for agent contracts, evidence grounding, bug classification, and RAG ranking. Not production evidence or model-quality claims.",
+  "created_at": "2026-11-09T00:00:00Z",
+  "synthetic": true,
+  "samples": [
+    {
+      "sample_id": "requirements-search-01",
+      "agent": "requirement_analysis",
+      "inputs": {
+        "requirements": "As a visitor, search the product catalog by keyword. Results should show matching product names. Do not submit forms or change account data."
+      },
+      "ground_truth": {
+        "required_terms": ["search", "keyword", "matching product", "forms", "account data"]
+      }
+    },
+    {
+      "sample_id": "planning-search-01",
+      "agent": "planning",
+      "inputs": {
+        "analysis": {
+          "objectives": ["Confirm catalog search is available and returns matching names."],
+          "functional_requirements": [
+            {"requirement_id": "REQ-01", "description": "Visitors can search the product catalog by keyword.", "expected_behavior": "Matching product names are shown."}
+          ],
+          "constraints": ["Do not submit forms."],
+          "limitations": ["Only read-only inspection is permitted."],
+          "ambiguities": [],
+          "missing_information": []
+        }
+      },
+      "ground_truth": {
+        "expected_requirement_ids": ["REQ-01"],
+        "expected_objective_terms": ["search", "matching"]
+      }
+    },
+    {
+      "sample_id": "website-search-evidence-01",
+      "agent": "website_understanding",
+      "inputs": {
+        "analysis": {
+          "objectives": ["Understand available catalog search evidence."],
+          "functional_requirements": [
+            {"requirement_id": "REQ-01", "description": "A keyword search is available.", "expected_behavior": "Matching products appear."}
+          ],
+          "constraints": ["Use observed evidence only."],
+          "limitations": [],
+          "ambiguities": [],
+          "missing_information": []
+        },
+        "evidence_index": {
+          "page.navigation_status": 200,
+          "page.final_url": "https://example.test/catalog",
+          "elements.inputs.count": 1,
+          "elements.buttons.count": 1,
+          "elements.links.count": 3
+        }
+      },
+      "ground_truth": {
+        "supported_requirement_ids": ["REQ-01"],
+        "expected_evidence_references": ["page.navigation_status", "elements.inputs.count"]
+      }
+    },
+    {
+      "sample_id": "test-generation-search-01",
+      "agent": "test_generation",
+      "inputs": {
+        "analysis": {
+          "objectives": ["Confirm the catalog search input is present."],
+          "functional_requirements": [
+            {"requirement_id": "REQ-01", "description": "A keyword search is available.", "expected_behavior": "Matching products appear."}
+          ],
+          "constraints": ["Do not submit forms."],
+          "limitations": [],
+          "ambiguities": [],
+          "missing_information": []
+        },
+        "plan": {
+          "tasks": [
+            {"test_id": "TASK-01", "objective": "Inspect the catalog search input.", "requirement_ref": "REQ-01", "priority": "P1", "prerequisites": [], "risk": "The input may not be present.", "expected_outcome": "The page exposes a search input.", "required_evidence": ["elements.inputs.count"]}
+          ]
+        },
+        "understanding": {
+          "summary": "The catalog loaded and one input was observed.",
+          "requirement_evidence": [
+            {"requirement_id": "REQ-01", "support": "SUPPORTED", "evidence_references": ["page.navigation_status", "elements.inputs.count"], "missing_evidence": []}
+          ],
+          "observed_element_references": ["elements.inputs.count"]
+        },
+        "evidence_index": {
+          "page.navigation_status": 200,
+          "page.final_url": "https://example.test/catalog",
+          "elements.inputs.count": 1,
+          "elements.buttons.count": 1
+        }
+      },
+      "ground_truth": {
+        "expected_requirement_ids": ["REQ-01"],
+        "expected_scenario_terms": ["search input", "catalog"],
+        "expected_scenario_count": 1
+      }
+    },
+    {
+      "sample_id": "bug-server-error-high-01",
+      "agent": "bug_analysis",
+      "inputs": {
+        "execution_results": [
+          {"test_case_id": "TC-01", "status": "FAILED", "summary": "The catalog request returned HTTP 500.", "actual_result": "Internal Server Error", "evidence_references": ["page.response_status"], "unsupported_reason": null}
+        ],
+        "benchmark_historical_context": "Synthetic historical reference benchmark: a prior catalog request returned HTTP 500 after server-side request handling failed. This is untrusted historical context, not proof about the current sample.",
+        "historical_references": ["benchmark:bug:prior-catalog-500"],
+        "evidence_index": {
+          "page.requested_url": "https://example.test/catalog",
+          "page.final_url": "https://example.test/catalog",
+          "page.response_status": 500
+        }
+      },
+      "ground_truth": {
+        "is_bug": true,
+        "severity": "HIGH",
+        "root_cause_terms": ["server", "request", "error"],
+        "expected_evidence": ["page.response_status"]
+      }
+    },
+    {
+      "sample_id": "bug-core-page-unavailable-critical-01",
+      "agent": "bug_analysis",
+      "inputs": {
+        "execution_results": [
+          {"test_case_id": "TC-07", "status": "FAILED", "summary": "The primary public landing page consistently returned HTTP 503 and could not load.", "actual_result": "Service Unavailable", "evidence_references": ["page.response_status"], "unsupported_reason": null}
+        ],
+        "evidence_index": {
+          "page.requested_url": "https://example.test/",
+          "page.final_url": "https://example.test/",
+          "page.response_status": 503
+        }
+      },
+      "ground_truth": {
+        "is_bug": true,
+        "severity": "CRITICAL",
+        "root_cause_terms": ["service", "unavailable"],
+        "expected_evidence": ["page.response_status"]
+      }
+    },
+    {
+      "sample_id": "bug-expected-not-found-info-01",
+      "agent": "bug_analysis",
+      "inputs": {
+        "execution_results": [
+          {"test_case_id": "TC-02", "status": "PASSED", "summary": "The deliberately unknown optional page returned the documented HTTP 404.", "actual_result": "Not Found", "evidence_references": ["page.response_status"], "unsupported_reason": null}
+        ],
+        "evidence_index": {
+          "page.requested_url": "https://example.test/optional-page",
+          "page.final_url": "https://example.test/optional-page",
+          "page.response_status": 404
+        }
+      },
+      "ground_truth": {
+        "is_bug": false,
+        "severity": "INFO",
+        "root_cause_terms": [],
+        "expected_evidence": ["page.response_status"]
+      }
+    },
+    {
+      "sample_id": "bug-console-error-medium-01",
+      "agent": "bug_analysis",
+      "inputs": {
+        "execution_results": [
+          {"test_case_id": "TC-03", "status": "FAILED", "summary": "An uncaught application JavaScript error occurred during catalog rendering.", "actual_result": "TypeError while rendering product list", "evidence_references": ["console.errors.count"], "unsupported_reason": null}
+        ],
+        "evidence_index": {
+          "page.requested_url": "https://example.test/catalog",
+          "page.final_url": "https://example.test/catalog",
+          "page.navigation_status": 200,
+          "console.errors.count": 1
+        }
+      },
+      "ground_truth": {
+        "is_bug": true,
+        "severity": "MEDIUM",
+        "root_cause_terms": ["javascript", "render"],
+        "expected_evidence": ["console.errors.count"]
+      }
+    },
+    {
+      "sample_id": "bug-insufficient-network-evidence-01",
+      "agent": "bug_analysis",
+      "inputs": {
+        "execution_results": [
+          {"test_case_id": "TC-04", "status": "BLOCKED", "summary": "A transient network failure prevented inspection; no application response was observed.", "actual_result": null, "evidence_references": [], "unsupported_reason": "No response evidence."}
+        ],
+        "evidence_index": {
+          "page.requested_url": "https://example.test/catalog",
+          "network.failures.count": 1
+        }
+      },
+      "ground_truth": {
+        "is_bug": false,
+        "severity": "INFO",
+        "root_cause_terms": [],
+        "expected_evidence": []
+      }
+    },
+    {
+      "sample_id": "bug-low-impact-link-01",
+      "agent": "bug_analysis",
+      "inputs": {
+        "execution_results": [
+          {"test_case_id": "TC-05", "status": "FAILED", "summary": "A secondary catalog help link leads to an incorrect public help page.", "actual_result": "Wrong help content", "evidence_references": ["elements.links.count"], "unsupported_reason": null}
+        ],
+        "evidence_index": {
+          "page.requested_url": "https://example.test/catalog",
+          "page.final_url": "https://example.test/catalog",
+          "elements.links.count": 3
+        }
+      },
+      "ground_truth": {
+        "is_bug": true,
+        "severity": "LOW",
+        "root_cause_terms": ["link", "destination"],
+        "expected_evidence": ["elements.links.count"]
+      }
+    },
+    {
+      "sample_id": "bug-informational-response-01",
+      "agent": "bug_analysis",
+      "inputs": {
+        "execution_results": [
+          {"test_case_id": "TC-06", "status": "PASSED", "summary": "The read-only health endpoint returned its documented status.", "actual_result": "HTTP 200", "evidence_references": ["page.response_status"], "unsupported_reason": null}
+        ],
+        "evidence_index": {
+          "page.requested_url": "https://example.test/health",
+          "page.final_url": "https://example.test/health",
+          "page.response_status": 200
+        }
+      },
+      "ground_truth": {
+        "is_bug": false,
+        "severity": "INFO",
+        "root_cause_terms": [],
+        "expected_evidence": ["page.response_status"]
+      }
+    },
+    {
+      "sample_id": "reporting-summary-01",
+      "agent": "reporting",
+      "inputs": {
+        "execution_id": "8e39e85a-5356-4833-becf-a7cc6d5aa920",
+        "tests": [],
+        "results": [
+          {"test_case_id": "TC-01", "status": "FAILED", "summary": "Catalog request returned HTTP 500.", "actual_result": "Internal Server Error", "evidence_references": ["page.response_status"], "unsupported_reason": null}
+        ],
+        "findings": [
+          {"bug_id": "BUG-01", "title": "Catalog server error", "description": "The catalog response returned HTTP 500.", "severity": "HIGH", "confidence_score": 0.9, "probable_root_cause": "The server failed while handling the catalog request.", "supporting_evidence": ["page.response_status"], "affected_url": "https://example.test/catalog", "recommended_action": "Review server-side request handling.", "historical_references": []}
+        ],
+        "observed_facts": [
+          {"fact": "Catalog response status was 500.", "evidence_references": ["page.response_status"]}
+        ]
+      },
+      "ground_truth": {
+        "required_summary_terms": ["catalog", "500"],
+        "required_recommendation_terms": ["server", "request"]
+      }
+    },
+    {
+      "sample_id": "workflow-read-only-01",
+      "agent": "workflow",
+      "inputs": {
+        "requirements": "Inspect the catalog page and report whether it loads. Do not interact with forms.",
+        "evidence_index": {
+          "page.navigation_status": 200,
+          "page.requested_url": "https://example.test/catalog",
+          "page.final_url": "https://example.test/catalog",
+          "elements.inputs.count": 1
+        },
+        "inspection": {
+          "requested_url": "https://example.test/catalog",
+          "final_url": "https://example.test/catalog",
+          "title": "Synthetic Catalog",
+          "navigation_status": 200,
+          "interactive_elements": {
+            "total_count": 1,
+            "truncated": false,
+            "inputs": [{"type": "search", "name": "q"}],
+            "buttons": [],
+            "links": [],
+            "selects": [],
+            "textareas": [],
+            "forms": []
+          },
+          "events": {
+            "console": [],
+            "page_errors": [],
+            "network": []
+          }
+        },
+        "execution_results": [
+          {"test_case_id": "TC-01", "status": "PASSED", "summary": "The catalog page loaded successfully.", "actual_result": "HTTP 200", "evidence_references": ["page.navigation_status"], "unsupported_reason": null}
+        ],
+        "execution_id": "8e39e85a-5356-4833-becf-a7cc6d5aa920"
+      },
+      "ground_truth": {
+        "required_report_terms": ["catalog", "loaded"],
+        "required_findings_count_max": 0
+      }
+    },
+    {
+      "sample_id": "rag-checkout-tax-01",
+      "agent": "rag_retrieval",
+      "inputs": {
+        "query": "The checkout total does not refresh after a shipping option changes.",
+        "top_k": 3,
+        "project_scope": "evaluation-only",
+        "documents": [
+          {
+            "document_id": "checkout-total-refresh",
+            "title": "Checkout total refresh finding",
+            "source_reference": "benchmark:bug:checkout-total-refresh",
+            "source_type": "historical_bug",
+            "severity": "MEDIUM",
+            "content": "Synthetic benchmark finding: checkout total remained stale after a shipping option change because the total refresh handler was not called."
+          },
+          {
+            "document_id": "catalog-image-layout",
+            "title": "Catalog image layout finding",
+            "source_reference": "benchmark:bug:catalog-image-layout",
+            "source_type": "historical_bug",
+            "severity": "LOW",
+            "content": "Synthetic benchmark finding: catalog product images were displayed with inconsistent aspect ratios."
+          },
+          {
+            "document_id": "health-endpoint",
+            "title": "Health endpoint report",
+            "source_reference": "benchmark:report:health-endpoint",
+            "source_type": "qa_report",
+            "severity": "INFO",
+            "content": "Synthetic benchmark report: the read-only health endpoint returned HTTP 200."
+          }
+        ]
+      },
+      "ground_truth": {
+        "relevant_document_ids": ["checkout-total-refresh"],
+        "relevance_grades": {"checkout-total-refresh": 3, "catalog-image-layout": 0, "health-endpoint": 0},
+        "k": 3
+      }
+    }
+  ]
+}
