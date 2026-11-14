@@ -1,8 +1,8 @@
 # Autonomous QA Intelligence Platform (QA-Automation-Ai-Agent)
 
-> 🌐 **Live Demo Application**: [https://bulletin-likely-vocals-congratulations.trycloudflare.com](https://bulletin-likely-vocals-congratulations.trycloudflare.com)  
-> 📚 **API Documentation (Swagger UI)**: [https://bulletin-likely-vocals-congratulations.trycloudflare.com/docs](https://bulletin-likely-vocals-congratulations.trycloudflare.com/docs)  
-> 🩺 **Backend Health Status**: [https://bulletin-likely-vocals-congratulations.trycloudflare.com/health](https://bulletin-likely-vocals-congratulations.trycloudflare.com/health)
+> 🌐 **Live Demo Application**: [https://dense-moms-electronics-joe.trycloudflare.com](https://dense-moms-electronics-joe.trycloudflare.com)  
+> 📚 **API Documentation (Swagger UI)**: [https://dense-moms-electronics-joe.trycloudflare.com/docs](https://dense-moms-electronics-joe.trycloudflare.com/docs)  
+> 🩺 **Backend Health Status**: [https://dense-moms-electronics-joe.trycloudflare.com/health](https://dense-moms-electronics-joe.trycloudflare.com/health)
 
 An end-to-end AI-powered QA platform integrating agentic test planning, safe browser inspection with Playwright, structured test generation, bug analysis, RAG-assisted historical context, and an interactive React dashboard.
 
