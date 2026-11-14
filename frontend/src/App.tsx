@@ -1,22 +1,17 @@
-import { Component, Suspense, lazy, type ErrorInfo, type ReactNode } from 'react'
+import { Component, type ErrorInfo, type ReactNode } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import { AlertTriangle, ArrowLeft } from 'lucide-react'
 import { AppShell } from './layout/AppShell'
-import { Button, LoadingState } from './components'
+import { Button } from './components'
 
-const OverviewPage = lazy(() => import('./pages/Overview').then((module) => ({ default: module.OverviewPage })))
-const ProjectsPage = lazy(() => import('./pages/Projects').then((module) => ({ default: module.ProjectsPage })))
-const ProjectDetailPage = lazy(() => import('./pages/Projects').then((module) => ({ default: module.ProjectDetailPage })))
-const ExecutionsPage = lazy(() => import('./pages/Executions').then((module) => ({ default: module.ExecutionsPage })))
-const ExecutionDetailPage = lazy(() => import('./pages/Executions').then((module) => ({ default: module.ExecutionDetailPage })))
-const BugsPage = lazy(() => import('./pages/Intelligence').then((module) => ({ default: module.BugsPage })))
-const ReportsPage = lazy(() => import('./pages/Intelligence').then((module) => ({ default: module.ReportsPage })))
-const AgentsPage = lazy(() => import('./pages/Intelligence').then((module) => ({ default: module.AgentsPage })))
-const AnalyticsPage = lazy(() => import('./pages/Intelligence').then((module) => ({ default: module.AnalyticsPage })))
-const KnowledgePage = lazy(() => import('./pages/Knowledge').then((module) => ({ default: module.KnowledgePage })))
-const EvaluationsPage = lazy(() => import('./pages/Evaluations').then((module) => ({ default: module.EvaluationsPage })))
-const SettingsPage = lazy(() => import('./pages/Settings').then((module) => ({ default: module.SettingsPage })))
+import { OverviewPage } from './pages/Overview'
+import { ProjectsPage, ProjectDetailPage } from './pages/Projects'
+import { ExecutionsPage, ExecutionDetailPage } from './pages/Executions'
+import { BugsPage, ReportsPage, AgentsPage, AnalyticsPage } from './pages/Intelligence'
+import { KnowledgePage } from './pages/Knowledge'
+import { EvaluationsPage } from './pages/Evaluations'
+import { SettingsPage } from './pages/Settings'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -55,18 +50,18 @@ export default function App() {
       <ApplicationErrorBoundary>
         <Routes>
           <Route element={<AppShell />}>
-            <Route index element={<Suspense fallback={<LoadingState />}><OverviewPage /></Suspense>} />
-            <Route path="projects" element={<Suspense fallback={<LoadingState />}><ProjectsPage /></Suspense>} />
-            <Route path="projects/:projectId" element={<Suspense fallback={<LoadingState />}><ProjectDetailPage /></Suspense>} />
-            <Route path="executions" element={<Suspense fallback={<LoadingState />}><ExecutionsPage /></Suspense>} />
-            <Route path="executions/:executionId" element={<Suspense fallback={<LoadingState />}><ExecutionDetailPage /></Suspense>} />
-            <Route path="bugs" element={<Suspense fallback={<LoadingState />}><BugsPage /></Suspense>} />
-            <Route path="knowledge" element={<Suspense fallback={<LoadingState />}><KnowledgePage /></Suspense>} />
-            <Route path="agents" element={<Suspense fallback={<LoadingState />}><AgentsPage /></Suspense>} />
-            <Route path="evaluations" element={<Suspense fallback={<LoadingState />}><EvaluationsPage /></Suspense>} />
-            <Route path="reports" element={<Suspense fallback={<LoadingState />}><ReportsPage /></Suspense>} />
-            <Route path="analytics" element={<Suspense fallback={<LoadingState />}><AnalyticsPage /></Suspense>} />
-            <Route path="settings" element={<Suspense fallback={<LoadingState />}><SettingsPage /></Suspense>} />
+            <Route index element={<OverviewPage />} />
+            <Route path="projects" element={<ProjectsPage />} />
+            <Route path="projects/:projectId" element={<ProjectDetailPage />} />
+            <Route path="executions" element={<ExecutionsPage />} />
+            <Route path="executions/:executionId" element={<ExecutionDetailPage />} />
+            <Route path="bugs" element={<BugsPage />} />
+            <Route path="knowledge" element={<KnowledgePage />} />
+            <Route path="agents" element={<AgentsPage />} />
+            <Route path="evaluations" element={<EvaluationsPage />} />
+            <Route path="reports" element={<ReportsPage />} />
+            <Route path="analytics" element={<AnalyticsPage />} />
+            <Route path="settings" element={<SettingsPage />} />
             <Route path="*" element={<NotFound />} />
             <Route path="home" element={<Navigate to="/" replace />} />
           </Route>
