@@ -57,17 +57,32 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+from pathlib import Path
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+
 register_exception_handlers(app)
 app.include_router(api_router, prefix=settings.api_v1_prefix)
 app.include_router(health_router, include_in_schema=False)
 
+frontend_dist = Path(__file__).resolve().parents[2] / "frontend" / "dist"
+if frontend_dist.exists() and (frontend_dist / "index.html").exists():
+    if (frontend_dist / "assets").exists():
+        app.mount("/assets", StaticFiles(directory=str(frontend_dist / "assets")), name="frontend_assets")
 
-@app.get("/", tags=["application"], summary="Application status")
-async def root(request: Request) -> dict[str, str]:
-    app_settings = request.app.state.settings
-    return {
-        "application": app_settings.app_name,
-        "version": app_settings.app_version,
-        "environment": app_settings.environment,
-        "status": "API is operational",
-    }
+    @app.get("/{full_path:path}", include_in_schema=False)
+    async def serve_spa(full_path: str):
+        target = frontend_dist / full_path
+        if full_path and target.exists() and target.is_file():
+            return FileResponse(target)
+        return FileResponse(frontend_dist / "index.html")
+else:
+    @app.get("/", tags=["application"], summary="Application status")
+    async def root(request: Request) -> dict[str, str]:
+        app_settings = request.app.state.settings
+        return {
+            "application": app_settings.app_name,
+            "version": app_settings.app_version,
+            "environment": app_settings.environment,
+            "status": "API is operational",
+        }
