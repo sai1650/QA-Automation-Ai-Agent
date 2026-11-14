@@ -1,4 +1,8 @@
-﻿# Autonomous QA Intelligence Platform (QA-Automation-Ai-Agent)
+# Autonomous QA Intelligence Platform (QA-Automation-Ai-Agent)
+
+> 🌐 **Live Demo Application**: [https://e89d533bca933a.app.lhr.life](https://e89d533bca933a.app.lhr.life)  
+> 📚 **API Documentation (Swagger UI)**: [https://e89d533bca933a.app.lhr.life/docs](https://e89d533bca933a.app.lhr.life/docs)  
+> 🩺 **Backend Health Status**: [https://e89d533bca933a.app.lhr.life/health](https://e89d533bca933a.app.lhr.life/health)
 
 An end-to-end AI-powered QA platform integrating agentic test planning, safe browser inspection with Playwright, structured test generation, bug analysis, RAG-assisted historical context, and an interactive React dashboard.
 
