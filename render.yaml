@@ -1,0 +1,17 @@
+﻿services:
+  - type: web
+    name: qa-automation-ai-agent
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: LOG_LEVEL
+        value: INFO
+      - key: BROWSER_HEADLESS
+        value: "true"
+      - key: RAG_ENABLED
+        value: "false"

@@ -68,8 +68,13 @@ register_exception_handlers(app)
 app.include_router(api_router, prefix=settings.api_v1_prefix)
 app.include_router(health_router, include_in_schema=False)
 
-frontend_dist = Path(__file__).resolve().parents[2] / "frontend" / "dist"
-if frontend_dist.exists() and (frontend_dist / "index.html").exists():
+candidate_paths = [
+    Path(__file__).resolve().parents[2] / "frontend" / "dist",
+    Path(__file__).resolve().parents[1] / "frontend" / "dist",
+    Path.cwd() / "frontend" / "dist",
+]
+frontend_dist = next((p for p in candidate_paths if p.exists() and (p / "index.html").exists()), None)
+if frontend_dist:
     class CachedStaticFiles(StaticFiles):
         async def get_response(self, path: str, scope):
             response = await super().get_response(path, scope)
