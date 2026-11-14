@@ -41,6 +41,7 @@ backend/storage/chroma/
 # Inspection & runtime artifacts
 artifacts/
 *.zip
+cloudflared.exe
 
 # Logs
 logs/
