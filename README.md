@@ -1,7 +1,6 @@
 # Autonomous QA Intelligence Platform (QA-Automation-Ai-Agent)
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/sai1650/QA-Automation-Ai-Agent)
-
+https://qa-automation-ai-agent.onrender.com/
 > 🚀 **1-Click 24/7 Cloud Deployment**: Click the button above to deploy this entire platform to Render for free.
 
 An end-to-end AI-powered QA platform integrating agentic test planning, safe browser inspection with Playwright, structured test generation, bug analysis, RAG-assisted historical context, and an interactive React dashboard.
